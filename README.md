@@ -11,6 +11,7 @@ Using the Yahoo! Question-Answer Dataset, build a document classification model.
 - Also include justification for any model architecture chosen
 - Include any exploratory data analysis done before building the model (in a jupyter notebook or any other format)
 - You can use any library you believe is relevant to the completion of the task
+- We encourage the use of `python`, if you do not use `python`, please reach out to us.
 
 ## Review notes
 
