@@ -17,6 +17,7 @@ Using the Yahoo! Question-Answer Dataset, build a document classification model.
 When reviewing the code, we will pay attention to:
 
 - Code quality, maintainability and readability
+- Data exploration
 - Model architecture choice
 - Evaluation method and metrics used
 - Model performance
