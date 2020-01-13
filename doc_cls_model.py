@@ -69,10 +69,7 @@ def doc_cls_model():
   
   train_labels_fn = np.array(train_labels_f)
   test_labels_fn = np.array(test_labels_f)
-
-  #return train_sentences, test_sentences, train_labels_f, test_labels_f
     
-#def build_model():    
   vocab_size = 50000
   embedding_dim = 128
   max_length = 200
@@ -109,7 +106,7 @@ def doc_cls_model():
   model_summary = model.summary()  
   output = model.fit(train_sent_par,
                     train_label_par,
-                    epochs = 20,
+                    epochs = 30,
                     batch_size = 256,
                     validation_data=(validation_sentence, validation_label),
                     verbose=1
