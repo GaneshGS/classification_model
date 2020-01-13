@@ -71,7 +71,7 @@ def doc_cls_model():
   test_labels_fn = np.array(test_labels_f)
     
   vocab_size = 50000
-  embedding_dim = 128
+  embedding_dim = 256
   max_length = 200
   trunc_type='post'
   oov_tok = "<OOV>"
@@ -92,25 +92,27 @@ def doc_cls_model():
   validation_sentence = train_padded[1050000:]
   validation_label = train_labels_fn[1050000:]
 
-  model = tf.keras.Sequential([
-  tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length, mask_zero=True),
-  tf.keras.layers.Dropout(0.1),             
-  tf.keras.layers.Flatten(),
-  tf.keras.layers.Dropout(0.5),
-  tf.keras.layers.Dense(64, activation='relu'),
-  tf.keras.layers.Dropout(0.5),
-  tf.keras.layers.Dense(10, activation='softmax')
-  ])
-    
+  def build_model()
+    model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length, mask_zero=True),
+    tf.keras.layers.Dropout(0.1),             
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(10, activation='softmax')
+    ])
+    return model
+  model = build_model()   
   model.compile(loss='sparse_categorical_crossentropy',optimizer='adam',metrics=['accuracy']) 
   model_summary = model.summary()  
   output = model.fit(train_sent_par,
                     train_label_par,
                     epochs = 30,
-                    batch_size = 256,
+                    batch_size = 1024,
                     validation_data=(validation_sentence, validation_label),
                     verbose=1
                     )   
-  model_results =  model.evaluate(test_padded, test_labels_f)
+  model_results =  model.evaluate(test_padded, test_labels_fn)
   model_save = model.save('model.h5')
   return output, model_summary, model_results, model_save  
