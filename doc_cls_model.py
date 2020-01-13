@@ -1,18 +1,25 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-def doc_cls_model(): 
-  import tensorflow as tf
-  tf.enable_eager_execution()
-  import pandas as pd
-  import numpy as np
-  from numpy import genfromtxt  
-  import io
-  import os
-  import tarfile
-  from google.colab import drive
-  from tensorflow import keras
-  from tensorflow.keras.preprocessing.text import Tokenizer
-  from tensorflow.keras.preprocessing.sequence import pad_sequences  
+import tensorflow as tf
+tf.enable_eager_execution()
+import pandas as pd
+import numpy as np
+from numpy import genfromtxt  
+import io
+import os
+import tarfile
+import tempfile
+from google.colab import drive
+from tensorflow import keras
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences  
 
+vocab_size = 50000
+embedding_dim = 128
+max_length = 200
+trunc_type='post'
+oov_tok = "<OOV>"
+
+def process_data():
   drive.mount('/content/drive/') 
   %cd '/content/drive/My Drive'
   !tar -xvf yahoo_answers_csv.tar.gz
@@ -68,14 +75,8 @@ def doc_cls_model():
     test_labels_f.append(i-1)
   
   train_labels_fn = np.array(train_labels_f)
-  test_labels_fn = np.array(test_labels_f)
-    
-  vocab_size = 50000
-  embedding_dim = 256
-  max_length = 200
-  trunc_type='post'
-  oov_tok = "<OOV>"
-
+  test_labels_fn = np.array(test_labels_f)    
+   
   tokenizer = Tokenizer(num_words =vocab_size, oov_token=oov_tok)
   tokenizer.fit_on_texts(train_sentences)
   word_index = tokenizer.word_index
@@ -92,27 +93,37 @@ def doc_cls_model():
   validation_sentence = train_padded[1050000:]
   validation_label = train_labels_fn[1050000:]
 
-  def build_model()
-    model = tf.keras.Sequential([
-    tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length, mask_zero=True),
-    tf.keras.layers.Dropout(0.1),             
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(64, activation='relu'),
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(10, activation='softmax')
-    ])
-    return model
-  model = build_model()   
-  model.compile(loss='sparse_categorical_crossentropy',optimizer='adam',metrics=['accuracy']) 
-  model_summary = model.summary()  
-  output = model.fit(train_sent_par,
-                    train_label_par,
-                    epochs = 30,
-                    batch_size = 1024,
-                    validation_data=(validation_sentence, validation_label),
-                    verbose=1
-                    )   
-  model_results =  model.evaluate(test_padded, test_labels_fn)
-  model_save = model.save('model.h5')
-  return output, model_summary, model_results, model_save  
+  return train_sent_par, train_label_par, validation_sentence, validation_label, test_padded, test_labels_fn
+
+train_sent_par, train_label_par, validation_sentence, validation_label, test_padded, test_labels_fn = process_data()
+
+def clmodel(): 
+  model = tf.keras.Sequential([
+  tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length, mask_zero=True),
+  tf.keras.layers.Dropout(0.1),             
+  tf.keras.layers.Flatten(),
+  tf.keras.layers.Dropout(0.5), 
+  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dropout(0.5),
+  tf.keras.layers.Dense(10, activation='softmax')
+  ])
+  model.compile(loss='sparse_categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+  return model  
+
+model = clmodel():
+model.summary()
+
+def execute_model():
+  clmodel_output = model.fit(train_sent_par,
+                     train_label_par,
+                     epochs = 40,
+                     batch_size = 512,
+                     validation_data=(validation_sentence, validation_label),
+                     verbose=1
+                     )
+  clmodel_results = model.evaluate(test_padded, test_labels_fn)
+  return clmodel_output, clmodel_summary, clmodel_results   
+
+clmodel_output, clmodel_results = execute_model()
+
+
