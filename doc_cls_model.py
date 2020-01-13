@@ -110,7 +110,7 @@ def clmodel():
   model.compile(loss='sparse_categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
   return model  
 
-model = clmodel():
+model = clmodel()
 model.summary()
 
 def execute_model():
