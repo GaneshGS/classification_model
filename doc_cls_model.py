@@ -125,5 +125,3 @@ def execute_model():
   return clmodel_output, clmodel_summary, clmodel_results   
 
 clmodel_output, clmodel_results = execute_model()
-
-
