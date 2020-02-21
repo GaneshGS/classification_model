@@ -5,4 +5,4 @@ The use case of the model is that you provide any document as an input to the mo
 
 Please refer the document_classes file for knowing the class tags the model uses for document classification.
 
-The backend code is ready and the front end code is under process.
+The backend code is a classification model which is already built and the front end code of serving the model on the web platform is in process.
